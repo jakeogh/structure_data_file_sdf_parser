@@ -67,7 +67,7 @@ def cli(paths,
 
         mols = pybel.readfile('sdf', path)
         amol = next(mols)
-        pprint.pprint(amol.data)
+        pprint.pprint(amol.data, indent=1)
 
         #with open(path, 'rb') as fh:
         #    path_bytes_data = fh.read()
