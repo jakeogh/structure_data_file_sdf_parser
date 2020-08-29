@@ -20,31 +20,23 @@ import os
 import sys
 import click
 from pathlib import Path
-from shutil import get_terminal_size
 from icecream import ic
 from kcl.configops import click_read_config
 from kcl.configops import click_write_config_entry
-from kcl.inputops import input_iterator
+from kcl.inputops import enumerate_input
 
 
 ic.configureOutput(includeContext=True)
-ic.lineWrapWidth, _ = get_terminal_size((80, 20))
 # import IPython; IPython.embed()
 # import pdb; pdb.set_trace()
 # from pudb import set_trace; set_trace(paused=False)
 
-APP_NAME = 'structuredatafile'
+APP_NAME = 'structure_data_file_sdf_parser'
 # https://stackoverflow.com/questions/14921929/python-progam-to-read-sdf-chemistry-file
 
 # DONT CHANGE FUNC NAME
 @click.command()
 @click.argument("paths", type=str, nargs=-1)
-@click.argument("sysskel",
-                type=click.Path(exists=False,
-                                dir_okay=True,
-                                file_okay=False,
-                                path_type=str,
-                                allow_dash=False), nargs=1, required=True)
 @click.option('--add', is_flag=True)
 @click.option('--verbose', is_flag=True)
 @click.option('--debug', is_flag=True)
@@ -52,16 +44,11 @@ APP_NAME = 'structuredatafile'
 @click.option("--null", is_flag=True)
 #@click.group()
 def cli(paths,
-        sysskel,
         add,
         verbose,
         debug,
         ipython,
         null):
-
-    byte = b'\n'
-    if null:
-        byte = b'\x00'
 
     config, config_mtime = click_read_config(click_instance=click,
                                              app_name=APP_NAME,
@@ -69,9 +56,10 @@ def cli(paths,
     if verbose:
         ic(config, config_mtime)
 
-    for index, path in enumerate(input_iterator(strings=paths,
-                                                null=null,
-                                                verbose=verbose)):
+    for index, path in enumerat_input(iterator=paths,
+                                      null=null,
+                                      debug=debug,
+                                      verbose=verbose)):
         if verbose:
             ic(index, path)
 

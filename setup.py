@@ -10,12 +10,12 @@ dependencies = ["icecream", "click", "colorama"]
 
 config = {
     "version": "0.1",
-    "name": "structuredatafile",
-    "url": "https://github.com/jakeogh/structuredatafile",
+    "name": "structure_data_file_sdf_parser",
+    "url": "https://github.com/jakeogh/structure_data_file_sdf_parser",
     "license": "ISC",
     "author": "Justin Keogh",
     "author_email": "github.com@v6y.net",
-    "description": "Short explination of what it does _here_",
+    "description": "Parse (chemical) Strcuture Data Files (SDF)",
     "long_description": __doc__,
     "packages": find_packages(exclude=['tests']),
     "include_package_data": True,
@@ -24,7 +24,7 @@ config = {
     "install_requires": dependencies,
     "entry_points": {
         "console_scripts": [
-            "structuredatafile=structuredatafile.structuredatafile:cli",
+            "structure_data_file_sdf_parser=structure_data_file_sdf_parser.structure_data_file_sdf_parser:cli",
         ],
     },
 }
