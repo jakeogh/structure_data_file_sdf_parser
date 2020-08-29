@@ -38,9 +38,7 @@ APP_NAME = 'structure_data_file_sdf_parser'
 
 def molecule_dict_generator(path, verbose=False):
     for mol in pybel.readfile('sdf', path):
-        import IPython; IPython.embed()
-        amol = next(mol)
-        yield dict(amol.data)
+        yield dict(mol.data)
 
 
 # DONT CHANGE FUNC NAME
