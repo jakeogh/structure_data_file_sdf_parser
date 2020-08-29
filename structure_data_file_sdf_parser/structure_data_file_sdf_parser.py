@@ -18,6 +18,7 @@
 
 import os
 import sys
+import pprint
 from openbabel import pybel
 import click
 from pathlib import Path
@@ -65,6 +66,8 @@ def cli(paths,
             ic(index, path)
 
         mols = pybel.readfile('sdf', path)
+        amol = next(mols)
+        pprint.pprint(amol.data)
 
         #with open(path, 'rb') as fh:
         #    path_bytes_data = fh.read()
@@ -77,7 +80,7 @@ def cli(paths,
             key = "test_key"
             value = "test_value"
             config, config_mtime = click_write_config_entry(click_instance=click,
-                    app_name=APP_NAME,
+                                                            app_name=APP_NAME,
                                                             section=section,
                                                             key=key,
                                                             value=value,
