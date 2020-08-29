@@ -36,6 +36,12 @@ ic.configureOutput(includeContext=True)
 APP_NAME = 'structure_data_file_sdf_parser'
 # https://stackoverflow.com/questions/14921929/python-progam-to-read-sdf-chemistry-file
 
+def molecule_dict_generator(path, verbose=False):
+    for mol in pybel.readfile('sdf', path):
+        amol = next(mol)
+        yield dict(amol.data)
+
+
 # DONT CHANGE FUNC NAME
 @click.command()
 @click.argument("paths", type=str, nargs=-1)
@@ -65,15 +71,11 @@ def cli(paths,
         if verbose:
             ic(index, path)
 
-        mols = pybel.readfile('sdf', path)
-        amol = next(mols)
-        pprint.pprint(amol.data, indent=1)
-
-        #with open(path, 'rb') as fh:
-        #    path_bytes_data = fh.read()
-
-        if ipython:
-            import IPython; IPython.embed()
+        for mol_data in molecule_dict_generator(path):
+            pprint.pprint(mol_data, indent=1)
+            if ipython:
+                import IPython; IPython.embed()
+                break
 
         if add:
             section = "test_section"
