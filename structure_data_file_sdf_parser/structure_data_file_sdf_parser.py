@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.7
 
 # pylint: disable=C0111     # docstrings are always outdated and wrong
 # pylint: disable=W0511     # todo is encouraged
@@ -18,7 +18,7 @@
 
 import os
 import sys
-import pybel
+from openbabel import pybel
 import click
 from pathlib import Path
 from icecream import ic
@@ -77,7 +77,7 @@ def cli(paths,
             key = "test_key"
             value = "test_value"
             config, config_mtime = click_write_config_entry(click_instance=click,
-                                                            app_name=APP_NAME,
+                    app_name=APP_NAME,
                                                             section=section,
                                                             key=key,
                                                             value=value,
