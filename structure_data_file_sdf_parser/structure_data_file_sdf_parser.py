@@ -18,6 +18,7 @@
 
 import os
 import sys
+import pybel
 import click
 from pathlib import Path
 from icecream import ic
@@ -56,15 +57,17 @@ def cli(paths,
     if verbose:
         ic(config, config_mtime)
 
-    for index, path in enumerat_input(iterator=paths,
-                                      null=null,
-                                      debug=debug,
-                                      verbose=verbose)):
+    for index, path in enumerate_input(iterator=paths,
+                                       null=null,
+                                       debug=debug,
+                                       verbose=verbose):
         if verbose:
             ic(index, path)
 
-        with open(path, 'rb') as fh:
-            path_bytes_data = fh.read()
+        mols = pybel.readfile('sdf', path)
+
+        #with open(path, 'rb') as fh:
+        #    path_bytes_data = fh.read()
 
         if ipython:
             import IPython; IPython.embed()
