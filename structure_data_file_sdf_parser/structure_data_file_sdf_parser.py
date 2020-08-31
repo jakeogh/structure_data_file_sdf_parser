@@ -28,8 +28,7 @@ from icecream import ic
 from kcl.configops import click_read_config
 from kcl.configops import click_write_config_entry
 from kcl.inputops import enumerate_input
-from contextlib import contextmanager
-
+from kcl.commandops import run_command
 
 ic.configureOutput(includeContext=True)
 # import IPython; IPython.embed()
@@ -39,37 +38,31 @@ ic.configureOutput(includeContext=True)
 APP_NAME = 'structure_data_file_sdf_parser'
 # https://stackoverflow.com/questions/14921929/python-progam-to-read-sdf-chemistry-file
 
-# https://stackoverflow.com/questions/1430446/create-a-temporary-fifo-named-pipe-in-python
-@contextmanager
-def temp_fifo(verbose=False):
-    """Context Manager for creating named pipes with temporary names."""
-    tmpdir = tempfile.mkdtemp()
-    filename = os.path.join(tmpdir, 'fifo')  # Temporary filename
-    if verbose:
-        ic(filename)
-    os.mkfifo(filename)  # Create FIFO
-    try:
-        yield filename
-    finally:
-        os.unlink(filename)  # Remove file
-        os.rmdir(tmpdir)  # Remove directory
-
 
 def molecule_dict_generator(path, verbose=False):
     if path.endswith('.gz'):
-        with gzip.open(path) as gfh:
-            if verbose:
-                ic(gfh)
-            with temp_fifo(verbose=verbose) as fifo_file:
-                with open(fifo_file, 'wb') as ffh:
-                    sdf_chunk = gfh.read(4096*4)
-                    ic(len(sdf_chunk))
-                    ffh.write(sdf_chunk)
-                    for mol in pybel.readfile('sdf', fifo_file):
-                        sdf_chunk = gfh.read(4096*4)
-                        ic(len(sdf_chunk))
-                        ffh.write(sdf_chunk)
-                        yield dict(mol.data)
+        tmpdir = tempfile.mkdtemp()
+
+        command = "archivemount {path} {mountpoint} -o auto_unmount -o readonly".format(path=path, mountpoint=tmpdir)
+        output = run_command(command=command,
+                             shell=True,
+                             verbose=verbose,
+                             expected_exit_code=0)
+        ic(output)
+        import IPython; IPython.embed()
+        #with gzip.open(path) as gfh:
+        #    if verbose:
+        #        ic(gfh)
+        #    with temp_fifo(verbose=verbose) as fifo_file:
+        #        with open(fifo_file, 'wb') as ffh:
+        #            sdf_chunk = gfh.read(4096*4)
+        #            ic(len(sdf_chunk))
+        #            ffh.write(sdf_chunk)
+        #            for mol in pybel.readfile('sdf', fifo_file):
+        #                sdf_chunk = gfh.read(4096*4)
+        #                ic(len(sdf_chunk))
+        #                ffh.write(sdf_chunk)
+        #                yield dict(mol.data)
     else:
         for mol in pybel.readfile('sdf', path):
             yield dict(mol.data)
