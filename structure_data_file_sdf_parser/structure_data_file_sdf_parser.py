@@ -38,33 +38,8 @@ ic.configureOutput(includeContext=True)
 APP_NAME = 'structure_data_file_sdf_parser'
 # https://stackoverflow.com/questions/14921929/python-progam-to-read-sdf-chemistry-file
 
-
+# can read gzipped files
 def molecule_dict_generator(path, verbose=False):
-    #if path.endswith('.gz'):
-    #    tmpdir = tempfile.mkdtemp()
-
-    #    # https://github.com/cybernoid/archivemount/issues/16
-    #    command = "archivemount {path} {mountpoint} -o auto_unmount -o readonly".format(path=path, mountpoint=tmpdir)
-    #    output = run_command(command=command,
-    #                         shell=True,
-    #                         verbose=verbose,
-    #                         expected_exit_code=0)
-    #    ic(output)
-    #    import IPython; IPython.embed()
-        #with gzip.open(path) as gfh:
-        #    if verbose:
-        #        ic(gfh)
-        #    with temp_fifo(verbose=verbose) as fifo_file:
-        #        with open(fifo_file, 'wb') as ffh:
-        #            sdf_chunk = gfh.read(4096*4)
-        #            ic(len(sdf_chunk))
-        #            ffh.write(sdf_chunk)
-        #            for mol in pybel.readfile('sdf', fifo_file):
-        #                sdf_chunk = gfh.read(4096*4)
-        #                ic(len(sdf_chunk))
-        #                ffh.write(sdf_chunk)
-        #                yield dict(mol.data)
-    #else:
     for mol in pybel.readfile('sdf', path):
         yield dict(mol.data)
 
@@ -77,7 +52,6 @@ def molecule_dict_generator(path, verbose=False):
 @click.option('--debug', is_flag=True)
 @click.option('--ipython', is_flag=True)
 @click.option("--null", is_flag=True)
-#@click.group()
 def cli(paths,
         add,
         verbose,
