@@ -59,12 +59,13 @@ def molecule_dict_generator(path, verbose=False):
     if path.endswith('.gz'):
         with gzip.open(path) as gfh:
             with temp_fifo(verbose=verbose) as fifo_file:
-                sdf_chunk = gfh.read(4096*4)
-                fifo_file.write(sdf_chunk)
-                for mol in pybel.readfile('sdf', fifo_file):
+                with open(fifo_file, 'wb') as ffh:
                     sdf_chunk = gfh.read(4096*4)
-                    fifo_file.write(sdf_chunk)
-                    yield dict(mol.data)
+                    ffh.write(sdf_chunk)
+                    for mol in pybel.readfile('sdf', fifo_file):
+                        sdf_chunk = gfh.read(4096*4)
+                        ffh.write(sdf_chunk)
+                        yield dict(mol.data)
     else:
         for mol in pybel.readfile('sdf', path):
             yield dict(mol.data)
