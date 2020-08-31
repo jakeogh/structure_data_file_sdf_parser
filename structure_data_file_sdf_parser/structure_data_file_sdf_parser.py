@@ -38,6 +38,64 @@ ic.configureOutput(includeContext=True)
 APP_NAME = 'structure_data_file_sdf_parser'
 # https://stackoverflow.com/questions/14921929/python-progam-to-read-sdf-chemistry-file
 
+def readfile(format, filename, opt=None):
+    """Iterate over the molecules in a file.
+
+    Required parameters:
+       format - see the informats variable for a list of available
+                input formats
+       filename
+
+    Optional parameters:
+       opt    - a dictionary of format-specific options
+                For format options with no parameters, specify the
+                value as None.
+
+    You can access the first molecule in a file using the next() method
+    of the iterator (or the next() keyword in Python 3):
+        mol = readfile("smi", "myfile.smi").next() # Python 2
+        mol = next(readfile("smi", "myfile.smi"))  # Python 3
+
+    You can make a list of the molecules in a file using:
+        mols = list(readfile("smi", "myfile.smi"))
+
+    You can iterate over the molecules in a file as shown in the
+    following code snippet:
+    >>> atomtotal = 0
+    >>> for mol in readfile("sdf", "head.sdf"):
+    ...     atomtotal += len(mol.atoms)
+    ...
+    >>> print atomtotal
+    43
+    """
+    if opt is None:
+        opt = {}
+    obconversion = ob.OBConversion()
+    formatok = obconversion.SetInFormat(format)
+    for k, v in opt.items():
+        if v is None:
+            obconversion.AddOption(k, obconversion.INOPTIONS)
+        else:
+            obconversion.AddOption(k, obconversion.INOPTIONS, str(v))
+    if not formatok:
+        raise ValueError("%s is not a recognised Open Babel format" % format)
+    #if not os.path.isfile(filename):
+    #    raise IOError("No such file: '%s'" % filename)
+
+    def filereader():
+        obmol = ob.OBMol()
+        notatend = obconversion.ReadFile(obmol, filename)
+        while notatend:
+            yield Molecule(obmol)
+            obmol = ob.OBMol()
+            notatend = obconversion.Read(obmol)
+    return filereader()
+
+
+pybel.readfile = readfile
+
+
+
 
 def molecule_dict_generator(path, verbose=False):
     if path.endswith('.gz'):
