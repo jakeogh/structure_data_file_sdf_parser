@@ -20,6 +20,7 @@ import os
 import sys
 import pprint
 import tempfile
+import gzip
 from openbabel import pybel
 import click
 from pathlib import Path
@@ -56,9 +57,14 @@ def temp_fifo(verbose=False):
 
 def molecule_dict_generator(path, verbose=False):
     if path.endswith('.gz'):
-        with temp_fifo(verbose=verbose) as fifo_file:
-            for mol in pybel.readfile('sdf', fifo_file):
-                yield dict(mol.data)
+        with gzip.open(path) as gfh:
+            with temp_fifo(verbose=verbose) as fifo_file:
+                sdf_chunk = gfh.read(4096*4)
+                fifo_file.write(sdf_chunk)
+                for mol in pybel.readfile('sdf', fifo_file):
+                    sdf_chunk = gfh.read(4096*4)
+                    fifo_file.write(sdf_chunk)
+                    yield dict(mol.data)
     else:
         for mol in pybel.readfile('sdf', path):
             yield dict(mol.data)
