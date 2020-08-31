@@ -40,17 +40,17 @@ APP_NAME = 'structure_data_file_sdf_parser'
 
 
 def molecule_dict_generator(path, verbose=False):
-    if path.endswith('.gz'):
-        tmpdir = tempfile.mkdtemp()
+    #if path.endswith('.gz'):
+    #    tmpdir = tempfile.mkdtemp()
 
-        # https://github.com/cybernoid/archivemount/issues/16
-        command = "archivemount {path} {mountpoint} -o auto_unmount -o readonly".format(path=path, mountpoint=tmpdir)
-        output = run_command(command=command,
-                             shell=True,
-                             verbose=verbose,
-                             expected_exit_code=0)
-        ic(output)
-        import IPython; IPython.embed()
+    #    # https://github.com/cybernoid/archivemount/issues/16
+    #    command = "archivemount {path} {mountpoint} -o auto_unmount -o readonly".format(path=path, mountpoint=tmpdir)
+    #    output = run_command(command=command,
+    #                         shell=True,
+    #                         verbose=verbose,
+    #                         expected_exit_code=0)
+    #    ic(output)
+    #    import IPython; IPython.embed()
         #with gzip.open(path) as gfh:
         #    if verbose:
         #        ic(gfh)
@@ -64,9 +64,9 @@ def molecule_dict_generator(path, verbose=False):
         #                ic(len(sdf_chunk))
         #                ffh.write(sdf_chunk)
         #                yield dict(mol.data)
-    else:
-        for mol in pybel.readfile('sdf', path):
-            yield dict(mol.data)
+    #else:
+    for mol in pybel.readfile('sdf', path):
+        yield dict(mol.data)
 
 
 # DONT CHANGE FUNC NAME
