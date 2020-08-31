@@ -40,7 +40,7 @@ APP_NAME = 'structure_data_file_sdf_parser'
 
 # https://stackoverflow.com/questions/1430446/create-a-temporary-fifo-named-pipe-in-python
 @contextmanager
-def temp_fifo(verbosse=False):
+def temp_fifo(verbose=False):
     """Context Manager for creating named pipes with temporary names."""
     tmpdir = tempfile.mkdtemp()
     filename = os.path.join(tmpdir, 'fifo')  # Temporary filename
