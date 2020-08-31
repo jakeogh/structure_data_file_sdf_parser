@@ -100,7 +100,7 @@ def cli(paths,
         if verbose:
             ic(index, path)
 
-        for mol_data in molecule_dict_generator(path):
+        for mol_data in molecule_dict_generator(path, verbose=verbose):
             pprint.pprint(mol_data, indent=1)
             if ipython:
                 import IPython; IPython.embed()
