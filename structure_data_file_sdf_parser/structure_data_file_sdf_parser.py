@@ -43,6 +43,7 @@ def molecule_dict_generator(path, verbose=False):
     if path.endswith('.gz'):
         tmpdir = tempfile.mkdtemp()
 
+        # https://github.com/cybernoid/archivemount/issues/16
         command = "archivemount {path} {mountpoint} -o auto_unmount -o readonly".format(path=path, mountpoint=tmpdir)
         output = run_command(command=command,
                              shell=True,
