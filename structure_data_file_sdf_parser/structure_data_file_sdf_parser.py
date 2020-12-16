@@ -21,16 +21,10 @@ import pprint
 
 import click
 from enumerate_input import enumerate_input
-#from pathlib import Path
 from icecream import ic
 from kcl.configops import click_read_config, click_write_config_entry
-#import tempfile
-#import gzip
 from openbabel import pybel
 
-#from kcl.commandops import run_command
-
-ic.configureOutput(includeContext=True)
 # import IPython; IPython.embed()
 # import pdb; pdb.set_trace()
 # from pudb import set_trace; set_trace(paused=False)
