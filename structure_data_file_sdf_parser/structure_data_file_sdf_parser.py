@@ -14,21 +14,21 @@
 # pylint: disable=R0903     # too few public methods
 # pylint: disable=E1101     # no member for base
 # pylint: disable=W0201     # attribute defined outside __init__
-## pylint: disable=W0703     # catching too general exception
 
-import os
-import sys
+#import os
+#import sys
 import pprint
-import tempfile
-import gzip
-from openbabel import pybel
+
 import click
-from pathlib import Path
+from enumerate_input import enumerate_input
+#from pathlib import Path
 from icecream import ic
-from kcl.configops import click_read_config
-from kcl.configops import click_write_config_entry
-from kcl.inputops import enumerate_input
-from kcl.commandops import run_command
+from kcl.configops import click_read_config, click_write_config_entry
+#import tempfile
+#import gzip
+from openbabel import pybel
+
+#from kcl.commandops import run_command
 
 ic.configureOutput(includeContext=True)
 # import IPython; IPython.embed()
@@ -44,7 +44,6 @@ def molecule_dict_generator(path, verbose=False):
         yield dict(mol.data)
 
 
-# DONT CHANGE FUNC NAME
 @click.command()
 @click.argument("paths", type=str, nargs=-1)
 @click.option('--add', is_flag=True)
